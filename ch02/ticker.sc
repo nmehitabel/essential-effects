@@ -1,6 +1,5 @@
-import $file.^.catsimp
+import $exec.^.catsimp
 
-import cats.effect._
 import scala.concurrent.duration._
 
 object TickingClock extends IOApp {
