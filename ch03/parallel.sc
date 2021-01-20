@@ -45,6 +45,36 @@ object RunParMapNErrors extends IOApp {
   val e3 = (ko1, ko2).parTupled.void
 
 }
+
+object RunParTraverse extends IOApp {
+
+  def run(args: List[String]): IO[ExitCode] =
+    tasks
+      .parTraverse(task)
+      .debug
+      .as(ExitCode.Success)
+
+  val numTasks = 100
+  val tasks: List[Int] = List.range(0, numTasks)
+
+  def task(id: Int): IO[Int] = IO(id).debug
+
+}
+
+object RunParSequence extends IOApp {
+
+  def run(args: List[String]): IO[ExitCode] =
+    tasks.parSequence
+      .debug
+      .as(ExitCode.Success)
+
+  val numTasks = 100
+  val tasks: List[IO[Int]] = List.tabulate(numTasks)(task)
+
+  def task(id: Int): IO[Int] = IO(id).debug
+
+}
+
 def psep = println("-" * 30)
 println("RunMapN")
 RunMapN.run(List.empty[String]).unsafeRunSync
@@ -54,4 +84,10 @@ RunParMapN.run(List.empty[String]).unsafeRunSync
 psep
 println("RunParMapNErrors")
 RunParMapNErrors.run(List.empty[String]).unsafeRunSync
+psep
+println("RunParTraverse")
+RunParTraverse.run(List.empty[String]).unsafeRunSync
+psep
+println("RunParSequence")
+RunParSequence.run(List.empty[String]).unsafeRunSync
 psep
