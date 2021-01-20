@@ -41,7 +41,8 @@ object RunParMapNErrors extends IOApp {
 
   val e1 = (ok, ko1).parMapN((_, _) => ())
   val e2 = (ko1, ok).parMapN((_, _) => ())
-  val e3 = (ko1, ko2).parMapN((_, _) => ())
+  // cleaner code with parTupled.void to same effect
+  val e3 = (ko1, ko2).parTupled.void
 
 }
 def psep = println("-" * 30)
