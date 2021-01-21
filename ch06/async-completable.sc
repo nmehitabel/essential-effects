@@ -1,4 +1,3 @@
-import cats.effect.ExitCode
 import $exec.^.catsimp
 
 import debug._
