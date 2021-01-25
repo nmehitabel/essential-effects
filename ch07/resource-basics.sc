@@ -1,4 +1,3 @@
-import cats.effect.ExitCode
 import $exec.^.catsimp
 
 import debug._
@@ -62,7 +61,6 @@ object ResourceRead extends IOApp {
   def run(args: List[String]): IO[ExitCode] =
     args.headOption match {
       case Some(name) =>
-        //IO(s"hello $name").debug.as(ExitCode.Success)
         FileBufferReader.makeResource(name).use {rf =>
             rf.readBuffer(124).map {
               case (buf, _) => { // should start with "0030" and and at "0070"
