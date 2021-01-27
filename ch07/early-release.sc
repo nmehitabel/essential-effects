@@ -12,7 +12,7 @@ object Resources {
     def fromSource(source: Source): IO[Config] =
       for {
         config <- IO(Config(source.getLines().next()))
-        _ <- IO("read $config").debug
+        _ <- IO(s"Config.fromSource : read ${config.connectionURL}").debug
       } yield config
   }
 
@@ -23,12 +23,12 @@ object Resources {
   object DbConnection {
     def make(connectionURL: String): Resource[IO, DbConnection] =
       Resource.make(
-        IO(s"opening connection to $connectionURL").debug *> IO(
+        IO(s"DbConnection : opening connection to $connectionURL").debug *> IO(
           new DbConnection{
-            def query(sql: String): IO[String] = IO(s"""(Results for query "$sql")""")
+            def query(sql: String): IO[String] = IO(s"""DbConnection : (Results for query "$sql")""")
           }
         )
-      ) ( _ => IO(s" Clsong connection to $connectionURL").debug.void)
+      ) ( _ => IO(s"DbConnection : Closing connection to $connectionURL").debug.void)
   }
 }
 
