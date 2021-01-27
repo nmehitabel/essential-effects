@@ -48,13 +48,17 @@ object EarlyRelease extends IOApp {
       conn <- DbConnection.make(config.connectionURL)
     } yield conn
 
+  // lazy val configResource: Resource[IO, Config] =
+  //   for {
+  //     source <- sourceResurce
+  //     config <- Resource.liftF(Config.fromSource(source))
+  //   } yield config
+  // to release source resource when value available
+  // becomes
   lazy val configResource: Resource[IO, Config] =
-    for {
-      source <- sourceResurce
-      config <- Resource.liftF(Config.fromSource(source))
-    } yield config
+    Resource.liftF(sourceResource.use(Config.fromSource))
 
-  lazy val sourceResurce: Resource[IO, Source] =
+  lazy val sourceResource: Resource[IO, Source] =
     Resource.make(
       IO(s">>> Opening Source to config").debug *> IO(Source.fromString(config))
       )(source => IO(s"<<< closing source to config").debug *> IO(source.close)
